@@ -2,6 +2,8 @@ package life.majiang.community.community.controller;
 
 import life.majiang.community.community.dto.AccessTokenDTO;
 import life.majiang.community.community.dto.GithubUser;
+import life.majiang.community.community.mapper.UserMapper;
+import life.majiang.community.community.model.User;
 import life.majiang.community.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,11 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
+    @Autowired
+    private UserMapper userMapper;
+
     @Value("${github.client.id}")
     private String ClientId;
     @Value("${github.client.secret}")
@@ -40,6 +46,16 @@ public class AuthorizeController {
             // 登陆成功
             System.out.println("登陆成功");
             request.getSession().setAttribute("user", user);
+
+            //插入数据库
+            User iuser = new User();
+            iuser.setAccountId(String.valueOf(user.getId()));
+            iuser.setToken(UUID.randomUUID().toString());
+            iuser.setName(user.getName());
+            iuser.setCreateTime(System.currentTimeMillis());
+            iuser.setModifyTime(iuser.getCreateTime());
+            userMapper.insert(iuser);
+
             return "redirect:/";
         }else {
             // 登陆失败
