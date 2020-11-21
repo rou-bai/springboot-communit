@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
-    @Autowired
+    @Autowired(required=false)
     private UserMapper userMapper;
 
     @Value("${github.client.id}")
@@ -34,7 +35,6 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request,
                            HttpServletResponse response){
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(ClientId);
@@ -45,7 +45,7 @@ public class AuthorizeController {
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
 //        System.out.println("我的名字：" + user.getName());
-        if (user != null){
+        if (user != null && user.getId() != null){
             // 登陆成功
             System.out.println("登陆成功");
 
@@ -57,6 +57,7 @@ public class AuthorizeController {
             iuser.setName(user.getName());
             iuser.setCreateTime(System.currentTimeMillis());
             iuser.setModifyTime(iuser.getCreateTime());
+            iuser.setAvatarUrl(user.getAvatar_url());
             userMapper.insert(iuser);
 
             //这个是直接将token写进session里，现调整为数据库存储token,验证token一致的用户才记session
