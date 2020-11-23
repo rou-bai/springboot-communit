@@ -5,7 +5,22 @@ body{
     margin:30px;
     background-color: white;
 }
-.btn-publish{
-    float:right;
-    margin-bottom:15px;
+.btn-publish {
+    float: right;
+    margin-bottom: 15px;
+}
+
+.touxiang {
+    margin-top:10px;
+    width:30px;
+}
+
+.biaotx{
+    width:40px;
+}
+
+.biaotext{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
 }
