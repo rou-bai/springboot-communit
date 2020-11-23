@@ -9,6 +9,6 @@ public class User {
     private String accountId;
     private String token;
     private Long createTime;
-    private Long modifyTime;
+    private Long modifytime;
     private String avatarUrl;
 }

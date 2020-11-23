@@ -56,8 +56,8 @@ public class AuthorizeController {
             iuser.setToken(token);
             iuser.setName(user.getName());
             iuser.setCreateTime(System.currentTimeMillis());
-            iuser.setModifyTime(iuser.getCreateTime());
-            iuser.setAvatarUrl(user.getAvatar_url());
+            iuser.setModifytime(iuser.getCreateTime());
+            iuser.setAvatarUrl(user.getAvatarUrl());
             userMapper.insert(iuser);
 
             //这个是直接将token写进session里，现调整为数据库存储token,验证token一致的用户才记session
