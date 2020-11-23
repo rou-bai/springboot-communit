@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>导航组件</title>
 </head>
 <body>
 <div th:fragment="nav">
@@ -29,7 +29,7 @@
                 <li class="dropdown" th:if="${session.user != null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">我的问题</a></li>
+                        <li><a href="/profile/questions">我的问题</a></li>
                         <li><a href="#">个人资料</a></li>
                         <li><a href="#">退出登陆</a></li>
                     </ul>
