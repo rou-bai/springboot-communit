@@ -9,8 +9,8 @@ public class QuestionDTO {
     private String title;
     private String tag;
     private String description;
-    private Long createTime;
-    private Long modifyTime;
+    private Long createtime;
+    private Long modifytime;
     private Integer likeCount;
     private Integer viewCount;
     private Integer commentCount;

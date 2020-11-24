@@ -67,8 +67,6 @@ public class PublishController {
 
         Question question = new Question();
         question.setCreator(user.getId());
-        question.setCreateTime(System.currentTimeMillis());
-        question.setModifyTime(question.getCreateTime());
         question.setTag(tag);
         question.setTitle(title);
         question.setDescription(description);

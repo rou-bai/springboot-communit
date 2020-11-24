@@ -33,7 +33,7 @@
                         <span th:text="${question.user.name}"></span>发表了文章 •
                         <span th:text="${question.getCommentCount()}"></span>个评论 •
                         <span th:text="${question.viewCount}"></span> 次浏览 •
-                        <span th:text="${#dates.format(question.createTime , 'yyyy-MM-dd')}"></span>
+                        <span th:text="${#dates.format(question.createtime, 'yyyy-MM-dd')}"></span>
                     </span>
                 </div>
             </div>
