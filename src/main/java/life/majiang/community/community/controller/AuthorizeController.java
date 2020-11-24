@@ -5,6 +5,7 @@ import life.majiang.community.community.dto.GithubUser;
 import life.majiang.community.community.mapper.UserMapper;
 import life.majiang.community.community.model.User;
 import life.majiang.community.community.provider.GithubProvider;
+import life.majiang.community.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -22,8 +23,8 @@ import java.util.UUID;
 public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
-    @Autowired(required=false)
-    private UserMapper userMapper;
+    @Autowired()
+    private UserService userService;
 
     @Value("${github.client.id}")
     private String ClientId;
@@ -55,10 +56,8 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             iuser.setToken(token);
             iuser.setName(user.getName());
-            iuser.setCreateTime(System.currentTimeMillis());
-            iuser.setModifytime(iuser.getCreateTime());
             iuser.setAvatarUrl(user.getAvatarUrl());
-            userMapper.insert(iuser);
+            userService.updateOrAddUser(iuser);
 
             //这个是直接将token写进session里，现调整为数据库存储token,验证token一致的用户才记session
 //            request.getSession().setAttribute("user", user);
@@ -70,5 +69,15 @@ public class AuthorizeController {
             System.out.println("登陆失败");
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
