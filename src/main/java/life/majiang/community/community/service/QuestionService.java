@@ -101,4 +101,12 @@ public class QuestionService {
 
         return questionDTO;
     }
+
+    public void updateOrAdd(Question question){
+        if(question.getId() != null && !question.getId().equals("")){
+            questionMapper.update(question);
+        }else{
+            questionMapper.create(question);
+        }
+    }
 }

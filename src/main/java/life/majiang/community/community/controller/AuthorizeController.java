@@ -45,7 +45,7 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
-//        System.out.println("我的名字：" + user.getName());
+
         if (user != null && user.getId() != null){
             // 登陆成功
             System.out.println("登陆成功");

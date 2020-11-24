@@ -1,8 +1,8 @@
 #FileLock
-#Tue Nov 24 17:49:19 CST 2020
+#Tue Nov 24 18:26:37 CST 2020
 hostName=tangyaodembp
-id=175f9a85110659f363a37bd5543512b9e9249cb77de
+id=175f9ca7ae3576ba9ecbdc1de8814f0ed256c69b217
 ipAddress=192.168.1.5
 method=socket
-port=61092
-server=192.168.1.5\:61093
+port=61999
+server=192.168.1.5\:62000
