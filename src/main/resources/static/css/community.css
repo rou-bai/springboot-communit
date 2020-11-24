@@ -28,3 +28,8 @@ body{
 .profile-list{
     margin-top:20px;
 }
+
+.question-edit{
+    color: #999;
+    text-decoration: none;
+}
