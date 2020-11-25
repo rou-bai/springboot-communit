@@ -2,12 +2,14 @@ package life.majiang.community.community.service;
 
 import life.majiang.community.community.dto.PaginationDTO;
 import life.majiang.community.community.dto.QuestionDTO;
+import life.majiang.community.community.exception.CustomizeErrorCode;
+import life.majiang.community.community.exception.CustomizeException;
 import life.majiang.community.community.mapper.QuestionMapper;
 import life.majiang.community.community.mapper.UserMapper;
 import life.majiang.community.community.model.Question;
 import life.majiang.community.community.model.QuestionExample;
 import life.majiang.community.community.model.User;
-import life.majiang.community.community.model.UserExample;
+import life.majiang.community.community.exception.CustomizeException;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +105,9 @@ public class QuestionService {
 
     public QuestionDTO listById(Integer id){
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_EXISTS);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
@@ -122,7 +127,10 @@ public class QuestionService {
             questionExample.createCriteria()
                     .andIdEqualTo(question.getId());
 
-            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            int upRes = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if (upRes != 1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_EXISTS);
+            }
         }else{
             question.setCreatetime(System.currentTimeMillis());
             question.setModifytime(question.getCreatetime());

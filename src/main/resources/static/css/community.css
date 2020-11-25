@@ -33,3 +33,7 @@ body{
     color: #999;
     text-decoration: none;
 }
+
+.error-text{
+    margin:50px;
+}
