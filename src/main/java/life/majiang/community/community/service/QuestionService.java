@@ -4,6 +4,7 @@ import life.majiang.community.community.dto.PaginationDTO;
 import life.majiang.community.community.dto.QuestionDTO;
 import life.majiang.community.community.exception.CustomizeErrorCode;
 import life.majiang.community.community.exception.CustomizeException;
+import life.majiang.community.community.mapper.QuestionExtMapper;
 import life.majiang.community.community.mapper.QuestionMapper;
 import life.majiang.community.community.mapper.UserMapper;
 import life.majiang.community.community.model.Question;
@@ -26,6 +27,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size){
         Integer offset = size * (page - 1);
@@ -62,7 +65,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO listByUserId(Integer userId, Integer page, Integer size){
+    public PaginationDTO listByUserId(Long userId, Integer page, Integer size){
         Integer offset = size * (page - 1);
         QuestionExample example = new QuestionExample();
         example.createCriteria()
@@ -103,7 +106,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO listById(Integer id){
+    public QuestionDTO listById(Long id){
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_EXISTS);
@@ -129,12 +132,25 @@ public class QuestionService {
 
             int upRes = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
             if (upRes != 1){
-                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_EXISTS);
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_UPDATE_FAILED);
             }
         }else{
             question.setCreatetime(System.currentTimeMillis());
             question.setModifytime(question.getCreatetime());
+            question.setCommentCount(0);
+            question.setViewCount(0);
+            question.setLikeCount(0);
             questionMapper.insert(question);
+        }
+    }
+
+    public void updateViewCount(Long id){
+        Question updateQuestion = new Question();
+        updateQuestion.setId(id);
+        updateQuestion.setViewCount(1);
+        int upRes = questionExtMapper.incView(updateQuestion);
+        if (upRes != 1){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_UPDATE_FAILED);
         }
     }
 }

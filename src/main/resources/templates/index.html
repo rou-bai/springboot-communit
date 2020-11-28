@@ -26,7 +26,7 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading">
-                        <a th:href="@{'/question/' + ${question.id}}" th:text="${question.getTitle()}"></a>
+                        <a th:href="@{'/question/' + ${question.getId()}}" th:text="${question.getTitle()}"></a>
                     </h4>
                     <span th:text="${question.description}"></span><br>
                     <span class="text-color-999 biaotext">
