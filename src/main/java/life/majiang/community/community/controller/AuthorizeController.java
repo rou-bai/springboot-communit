@@ -56,7 +56,7 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             iuser.setToken(token);
             iuser.setName(user.getName());
-            iuser.setAvatarUrl(user.getAvatarUrl());
+            iuser.setAvatarUrl(user.getAvatar_url());
             userService.updateOrAddUser(iuser);
 
             //这个是直接将token写进session里，现调整为数据库存储token,验证token一致的用户才记session
@@ -74,10 +74,13 @@ public class AuthorizeController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request,
                          HttpServletResponse response){
+
+        User user = (User) request.getSession().getAttribute("user");
         request.getSession().removeAttribute("user");
         Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+        userService.deleteUser(user.getId());
         return "redirect:/";
     }
 }

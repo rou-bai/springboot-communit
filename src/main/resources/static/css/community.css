@@ -34,6 +34,22 @@ body{
     text-decoration: none;
 }
 
+.question-media-body{
+    padding-top: 5px;
+}
+
+.question-img{
+    width:30px;
+}
+
+.question-media{
+    margin-bottom: 5px;
+}
+.question-btn{
+    margin: 5px 5px;
+    float: right;
+}
+
 .error-text{
     margin:50px;
 }

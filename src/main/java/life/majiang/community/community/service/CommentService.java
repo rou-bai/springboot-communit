@@ -10,6 +10,9 @@ import life.majiang.community.community.model.Comment;
 import life.majiang.community.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.beans.Transient;
 
 @Service
 public class CommentService {
@@ -20,6 +23,8 @@ public class CommentService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+    @Transactional
+    //增加spring自带的事物，中途异常全部回滚
     public void insert(Comment comment) {
         //参数检查
         if (comment.getParentId() == null && comment.getParentId() == 0) {
@@ -47,9 +52,9 @@ public class CommentService {
 
             addQuestion.setCommentCount(1);
             int upRes = questionExtMapper.incComment(addQuestion);
-//            if(upRes != 1){
-//                throw  new CustomizeException(CustomizeErrorCode.COMMENT_BIND_QUESTION_FAILED);
-//            }
+            if(upRes != 1){
+                throw  new CustomizeException(CustomizeErrorCode.COMMENT_BIND_QUESTION_FAILED);
+            }
         }
     }
 }

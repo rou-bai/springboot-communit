@@ -40,4 +40,9 @@ public class UserService {
             userMapper.updateByExampleSelective(newUser, example);
         }
     }
+
+    public void deleteUser(Long id){
+        UserExample userExample = new UserExample();
+        userMapper.deleteByPrimaryKey(id);
+    }
 }
