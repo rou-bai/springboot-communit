@@ -14,6 +14,7 @@ function question_post(){
         success: function (response){
             if(response.code == 200){
                 alert("回复成功");
+                location.reload();
             }else if(response.code == 4001){
                 var isAccept = confirm("当前用户未登陆，请确认是否跳转登陆");
                 if(isAccept){

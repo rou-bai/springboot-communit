@@ -1,7 +1,9 @@
 package life.majiang.community.community.controller;
 
+import life.majiang.community.community.dto.CommentDTO;
 import life.majiang.community.community.dto.QuestionDTO;
 import life.majiang.community.community.mapper.QuestionMapper;
+import life.majiang.community.community.service.CommentService;
 import life.majiang.community.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,12 +17,17 @@ import java.util.List;
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name="id") Long id,
                            Model model){
         QuestionDTO questionDTO = questionService.listById(id);
         model.addAttribute("question", questionDTO);
+
+        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        model.addAttribute("comments", comments);
 
         //阅读数增加
         questionService.updateViewCount(id);

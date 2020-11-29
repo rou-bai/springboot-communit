@@ -53,3 +53,30 @@ body{
 .error-text{
     margin:50px;
 }
+
+.question-span{
+    margin-left:15px;
+}
+
+.question-hr{
+    margin-top:0;
+}
+
+.question-span2{
+    font-size: 11px;
+    color: darkgrey;
+}
+
+.question-span3{
+    font-size: 14px;
+    color: darkgrey;
+    margin-right:5px;
+    margin-top:5px;
+    cursor: pointer;
+}
+.question-span3:hover{
+    color: #499ef3;
+}
+.question-hr1{
+    background-color: #eeeeee;
+}
