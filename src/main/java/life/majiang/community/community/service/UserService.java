@@ -41,8 +41,9 @@ public class UserService {
         }
     }
 
-    public void deleteUser(Long id){
-        UserExample userExample = new UserExample();
-        userMapper.deleteByPrimaryKey(id);
-    }
+    //删除用户
+//    public void deleteUser(Long id){
+//        UserExample userExample = new UserExample();
+//        userMapper.deleteByPrimaryKey(id);
+//    }
 }
