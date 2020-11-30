@@ -11,6 +11,7 @@ import life.majiang.community.community.model.Question;
 import life.majiang.community.community.model.QuestionExample;
 import life.majiang.community.community.model.User;
 import life.majiang.community.community.exception.CustomizeException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //这个文件处理数据库关联关系
 @Service
@@ -32,7 +35,9 @@ public class QuestionService {
 
     public PaginationDTO list(Integer page, Integer size){
         Integer offset = size * (page - 1);
-        List<Question> questionList = questionMapper.selectByExampleWithBLOBsWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
+        QuestionExample example = new QuestionExample();
+        example.setOrderByClause("modifytime desc");
+        List<Question> questionList = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
 
@@ -70,6 +75,7 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria()
                 .andCreatorEqualTo(userId);
+        example.setOrderByClause("modifytime desc");
         List<Question> questionList = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -152,5 +158,24 @@ public class QuestionService {
         if (upRes != 1){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_UPDATE_FAILED);
         }
+    }
+
+    public List<QuestionDTO> selectRelated(QuestionDTO questionDTO){
+        if(StringUtils.isBlank(questionDTO.getTag())){
+            return new ArrayList<>();
+        }
+
+        String[] tags = StringUtils.split(questionDTO.getTag(), "，");
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
+        Question question = new Question();
+        question.setTag(regexpTag);
+        question.setId(questionDTO.getId());
+        List<Question> questions = questionExtMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q->{
+            QuestionDTO quesDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, quesDTO);
+            return quesDTO;
+        }).collect(Collectors.toList());
+        return questionDTOS;
     }
 }

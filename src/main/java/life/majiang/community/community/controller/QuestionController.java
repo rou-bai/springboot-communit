@@ -30,6 +30,9 @@ public class QuestionController {
         List<CommentDTO> comments = commentService.listByParentId(id, CommentTypeEnum.QUESTION);
         model.addAttribute("comments", comments);
 
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
+        model.addAttribute("relatedQuestions", relatedQuestions);
+
         //阅读数增加
         questionService.updateViewCount(id);
         return "question";

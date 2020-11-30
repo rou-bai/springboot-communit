@@ -101,3 +101,19 @@ body{
 .question_like_count{
     margin-left:-5px;
 }
+
+.question-tag{
+    margin-right:10px;
+}
+
+.question-related{
+    font-size: 12px;
+    line-height: 20px;
+    margin-left:0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.question-fuli{
+    width:250px;
+}
