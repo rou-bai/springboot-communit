@@ -4,10 +4,7 @@ import life.majiang.community.community.dto.CommentDTO;
 import life.majiang.community.community.enmus.CommentTypeEnum;
 import life.majiang.community.community.exception.CustomizeErrorCode;
 import life.majiang.community.community.exception.CustomizeException;
-import life.majiang.community.community.mapper.CommentMapper;
-import life.majiang.community.community.mapper.QuestionExtMapper;
-import life.majiang.community.community.mapper.QuestionMapper;
-import life.majiang.community.community.mapper.UserMapper;
+import life.majiang.community.community.mapper.*;
 import life.majiang.community.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,8 @@ public class CommentService {
     private QuestionExtMapper questionExtMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
 
     @Transactional
     //增加spring自带的事物，中途异常全部回滚
@@ -46,33 +45,43 @@ public class CommentService {
 
         if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
             //新建评论
-            Comment addComment = commentMapper.selectByPrimaryKey(comment.getId());
-            if (addComment == null) {
+            Comment parentComment = commentMapper.selectByPrimaryKey(comment.getParentId());
+            if (parentComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_EXISTS);
             }
             commentMapper.insert(comment);
+
+            //评论的评论数+1
+            parentComment.setCommentCount(1);
+            int upRes = commentExtMapper.incCommentCount(parentComment);
+            if(upRes != 1){
+                throw  new CustomizeException(CustomizeErrorCode.COMMENT_COMMENT_FAILED);
+            }
+
         } else {
             //新建问题回复
-            Question addQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
-            if (addQuestion == null) {
+            Question parentQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
+            if (parentQuestion == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_EXISTS);
             }
             commentMapper.insert(comment);
 
-            addQuestion.setCommentCount(1);
-            int upRes = questionExtMapper.incComment(addQuestion);
+            // 问题评论数+1
+            parentQuestion.setCommentCount(1);
+            int upRes = questionExtMapper.incComment(parentQuestion);
             if(upRes != 1){
                 throw  new CustomizeException(CustomizeErrorCode.COMMENT_BIND_QUESTION_FAILED);
             }
         }
     }
 
-    public List<CommentDTO> listByQuestionId(Long id){
+    public List<CommentDTO> listByParentId(Long id, CommentTypeEnum type){
         //查询提问关联的评论
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
+        commentExample.setOrderByClause("modifytime desc");
         List<Comment> questionCommentList = commentMapper.selectByExample(commentExample);
 
         if(questionCommentList == null){
@@ -103,5 +112,17 @@ public class CommentService {
             return commentDTO;
         }).collect(Collectors.toList());
         return commentDTOS;
+    }
+
+    public void incLikeCount(Long id){
+        Comment comment = commentMapper.selectByPrimaryKey(id);
+        if(comment == null){
+            throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_EXISTS);
+        }
+        comment.setLikeCount(1);
+        int upRes = commentExtMapper.incLikeCount(comment);
+        if(upRes != 1){
+            throw  new CustomizeException(CustomizeErrorCode.COMMENT_LIKE_FAILED);
+        }
     }
 }

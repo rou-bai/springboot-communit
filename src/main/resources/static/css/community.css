@@ -74,9 +74,30 @@ body{
     margin-top:5px;
     cursor: pointer;
 }
+
 .question-span3:hover{
     color: #499ef3;
 }
+
+.question-span3.active{
+    color:#499ef3;
+}
+
 .question-hr1{
     background-color: #eeeeee;
+}
+
+.question-title{
+    margin-top:20px;
+}
+
+.question-div{
+    margin-top:10px;
+    border:1px solid #eee;
+    padding-top: 15px;
+    border-radius: 5px;
+}
+
+.question_like_count{
+    margin-left:-5px;
 }
