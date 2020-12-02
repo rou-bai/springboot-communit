@@ -15,7 +15,9 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     COMMENT_COMMENT_FAILED(3007, "评论失败"),
     COMMENT_ID_EMPTY(3007,"评论ID不能为空"),
     USER_NOT_EXISTS(4001, "用户未登陆"),
-    SYSTEM_ERROR(5001, "系统错误");
+    SYSTEM_ERROR(5001, "系统错误"),
+    NOTICE_READ_FAILED(6001, "通知查看失败"),
+    NOTICE_NOT_FOUND(6001, "通知没找到"),
     ;
 
     @Override

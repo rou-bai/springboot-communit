@@ -42,7 +42,7 @@ public class CommentController {
         comment.setType(commentCreateDTO.getType());
         comment.setLikeCount(0);
         comment.setCommentCount(0);
-        commentService.insert(comment);
+        commentService.insert(comment, user.getName());
         return ResultDTO.okOf();
     }
 

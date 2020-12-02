@@ -2,6 +2,8 @@ package life.majiang.community.community.service;
 
 import life.majiang.community.community.dto.CommentDTO;
 import life.majiang.community.community.enmus.CommentTypeEnum;
+import life.majiang.community.community.enmus.NotificationStatusEnum;
+import life.majiang.community.community.enmus.NotificationTypeEnum;
 import life.majiang.community.community.exception.CustomizeErrorCode;
 import life.majiang.community.community.exception.CustomizeException;
 import life.majiang.community.community.mapper.*;
@@ -30,10 +32,12 @@ public class CommentService {
     private UserMapper userMapper;
     @Autowired
     private CommentExtMapper commentExtMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     @Transactional
     //增加spring自带的事物，中途异常全部回滚
-    public void insert(Comment comment) {
+    public void insert(Comment comment, String name) {
         //参数检查
         if (comment.getParentId() == null && comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.COMMENT_PARENTID_WRONG);
@@ -58,6 +62,12 @@ public class CommentService {
                 throw  new CustomizeException(CustomizeErrorCode.COMMENT_COMMENT_FAILED);
             }
 
+            Question question = questionMapper.selectByPrimaryKey(parentComment.getParentId());
+
+            //创建通知
+            createNotify(comment, parentComment.getCommentator(), NotificationTypeEnum.REPLY_COMMENT, name,
+                         parentComment.getContent(), question.getId());
+
         } else {
             //新建问题回复
             Question parentQuestion = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -72,7 +82,25 @@ public class CommentService {
             if(upRes != 1){
                 throw  new CustomizeException(CustomizeErrorCode.COMMENT_BIND_QUESTION_FAILED);
             }
+
+            //创建通知
+            createNotify(comment, parentQuestion.getCreator(), NotificationTypeEnum.REPLY_QUESTION, name,
+                         parentQuestion.getTitle(), parentQuestion.getId());
         }
+    }
+
+    public void createNotify(Comment comment, Long reciver, NotificationTypeEnum type, String name, String title, Long questionId){
+        Notification notification = new Notification();
+        notification.setCreatetime(System.currentTimeMillis());
+        notification.setNotifier(comment.getCommentator());
+        notification.setOuterid(comment.getParentId());
+        notification.setType(type.getType());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReciver(reciver);
+        notification.setNotifiername(name);
+        notification.setOutertitle(title);
+        notification.setQuestionid(questionId);
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByParentId(Long id, CommentTypeEnum type){

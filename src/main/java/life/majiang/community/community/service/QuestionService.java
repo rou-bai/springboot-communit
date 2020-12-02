@@ -39,7 +39,7 @@ public class QuestionService {
         example.setOrderByClause("modifytime desc");
         List<Question> questionList = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
 
         for (Question question:questionList){
             User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -49,7 +49,7 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         }
 
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         Integer totalPage;
@@ -78,7 +78,7 @@ public class QuestionService {
         example.setOrderByClause("modifytime desc");
         List<Question> questionList = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
 
         for (Question question:questionList){
             User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -88,12 +88,8 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         }
 
-        paginationDTO.setQuestions(questionDTOList);
-
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.createCriteria()
-                .andCreatorEqualTo(userId);
-        Integer totalCount = (int) questionMapper.countByExample(questionExample);
+        paginationDTO.setData(questionDTOList);
+        Integer totalCount = (int) questionMapper.countByExample(example);
         Integer totalPage;
         // 计算总页数
         if(totalCount % size == 0){
