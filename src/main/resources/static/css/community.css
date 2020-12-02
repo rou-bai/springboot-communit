@@ -117,3 +117,22 @@ body{
 .question-fuli{
     width:250px;
 }
+
+.publish-tag{
+    margin-right:15px;
+}
+
+.publish-div{
+    margin-top:10px;
+}
+
+.publish-tab-div{
+    display: none;
+    margin-top:10px;
+}
+
+.publish-tab-pane{
+    padding-top:10px;
+    background: #eeeeee;
+    word-wrap:break-word;
+}

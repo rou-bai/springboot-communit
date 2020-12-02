@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/community.css">
     <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/community.js"></script>
 </head>
 <body>
 <div th:insert="navigation::nav"></div>
@@ -23,16 +24,40 @@
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）：</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="问题标题..." th:value="${title}">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="问题标题..." th:value="${title}" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="description">问题补充（必填，请参照右侧提示）：</label>
-                    <textarea name="description" id="description" class="form-control" cols="30" rows="10" th:text="${description}"></textarea>
+                    <textarea name="description" id="description" class="form-control" cols="30" rows="10" th:text="${description}" autocomplete="off"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="tag">添加标签：</label>
-                    <input type="text" class="form-control" id="tag" name="tag" placeholder="输入标签，以，号分隔" th:value="${tag}">
+                    <input type="text" class="form-control" id="tag" name="tag"
+                           placeholder="输入标签，以，号分隔(中文逗号才生效)" th:value="${tag}"
+                           autocomplete="off" onclick="showSelectTag()">
                 </div>
+                    <div class="publish-tab-div">
+<!--                        标签展示tab-->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" th:each="itag:${tags}">
+                                <a th:href="'#' + ${itag.getCategoryName}" th:aria-controls="${itag.getCategoryName()}" role="tab" data-toggle="tab" th:text="${itag.getCategoryName}">
+                                </a></li>
+                        </ul>
+<!--                        标签展示框-->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active publish-tab-pane" th:id="${itag.getCategoryName()}" th:each="itag:${tags}">
+                                <span class="glyphicon glyphicon-tags label label-primary publish-tag" th:each="eachTage:${itag.getTags()}" th:text="${eachTage}" th:data-tag="${eachTage}" onclick="selectTag(this)">Java</span>
+                            </div>
+<!--                            <div role="tabpanel" class="tab-pane active" id="home">-->
+<!--                                <span class="glyphicon glyphicon-tags label label-primary publish-tag" onclick="selectTag('Java')">Java</span>-->
+<!--                                <span class="glyphicon glyphicon-tags label label-primary publish-tag" onclick="selectTag('Python')">Python</span>-->
+<!--                            </div>-->
+<!--                            <div role="tabpanel" class="tab-pane" id="profile">-->
+<!--                                <span class="glyphicon glyphicon-tags label label-primary publish-tag" onclick="selectTag('Flask')">Flask</span>-->
+<!--                                <span class="glyphicon glyphicon-tags label label-primary publish-tag" onclick="selectTag('Spring Boot')">Spring Boot</span>-->
+<!--                            </div>-->
+                        </div>
+                    </div>
 
                 <div class="container-fluid main">
                     <div class="row">

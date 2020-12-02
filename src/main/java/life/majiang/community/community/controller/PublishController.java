@@ -1,10 +1,13 @@
 package life.majiang.community.community.controller;
 
+import life.majiang.community.community.cache.TageCache;
 import life.majiang.community.community.dto.QuestionDTO;
+import life.majiang.community.community.dto.TagDTO;
 import life.majiang.community.community.mapper.QuestionMapper;
 import life.majiang.community.community.model.Question;
 import life.majiang.community.community.model.User;
 import life.majiang.community.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +31,13 @@ public class PublishController {
         model.addAttribute("description", questionDTO.getDescription());
         model.addAttribute("tag", questionDTO.getTag());
         model.addAttribute("id", questionDTO.getId());
+        model.addAttribute("tags", TageCache.get());
         return "publish";
     }
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
+        model.addAttribute("tags", TageCache.get());
         return "publish";
     }
 
@@ -62,6 +67,12 @@ public class PublishController {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null){
             model.addAttribute("error", "用户未登陆");
+            return "publish";
+        }
+
+        String invalid = TageCache.filterInvalid(tag);
+        if(StringUtils.isNotBlank(invalid)){
+            model.addAttribute("error", "输入非法标签");
             return "publish";
         }
 

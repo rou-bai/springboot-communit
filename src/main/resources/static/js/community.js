@@ -143,3 +143,22 @@ function comment_comment(e){
     comment_fz(commentId, 2, content)
     $(".comment-content").val("");
 }
+
+//选择标签
+function selectTag(e) {
+    var tag = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if (previous.indexOf(tag) == -1) {
+        if (previous) {
+            $("#tag").val(previous + "，" + tag);
+        } else {
+            $("#tag").val(tag);
+        }
+    }
+}
+
+//展示标题tab
+function showSelectTag(){
+    $(".publish-tab-div").show();
+
+}
