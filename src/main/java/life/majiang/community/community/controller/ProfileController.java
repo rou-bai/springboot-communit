@@ -44,9 +44,6 @@ public class ProfileController {
             PaginationDTO paginations = notificationService.listByReciverId(user.getId(), page, size);
             model.addAttribute("pagination", paginations);
         }
-
-        Integer unreadCount = notificationService.unreadCount(user.getId());
-        model.addAttribute("unreadCount", unreadCount);
         return "profile";
     }
 }

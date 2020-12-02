@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import life.majiang.community.community.dto.ResultDTO;
 import life.majiang.community.community.exception.CustomizeErrorCode;
 import life.majiang.community.community.exception.CustomizeException;
+import life.majiang.community.community.service.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,6 +20,7 @@ import java.io.PrintWriter;
 
 @ControllerAdvice
 public class CustomizeExceotionHandler {
+
     @ExceptionHandler(Exception.class)
     Object handle(Throwable e, Model model,
                   HttpServletRequest request,
