@@ -32,6 +32,7 @@ body{
 .question-edit{
     color: #999;
     text-decoration: none;
+    margin-left:-10px;
 }
 
 .question-media-body{
@@ -133,6 +134,7 @@ body{
 
 .publish-tab-pane{
     padding-top:10px;
-    background: #eeeeee;
     word-wrap:break-word;
+    display: inline-block;
+    white-space: normal;
 }
