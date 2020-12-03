@@ -6,9 +6,14 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/editormd.min.css">
+    <link rel="stylesheet" href="/css/editormd.preview.css">
     <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/moment.min.js"></script>
+    <script src="/js/editormd.min.js"></script>
+    <script src="/js/lib/marked.min.js"></script>
+    <script src="/js/lib/prettify.min.js"></script>
     <script src="/js/community.js"></script>
 </head>
 <body>
@@ -26,7 +31,16 @@
                     阅读数: <span th:text="${question.viewCount}"></span>
                 </span>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}"></div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-views">
+                    <textarea style="display: none;" th:text="${question.description}"></textarea>
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        editormd.markdownToHTML("question-views", {
+                        });
+                    });
+                </script>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <!--                标签-->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -121,7 +135,7 @@
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>福利妈妈-求支持</h4>
-                <img src="/image/fuli.jpeg" class="img-thumbnail question-fuli">
+                <img src="/images/fuli.jpeg" class="img-thumbnail question-fuli">
             </div>
 
 <!--            相关问题-->
