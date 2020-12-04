@@ -37,4 +37,23 @@
         select * from QUESTION where id != #{id} and tag regexp #{tag}
     </select>
 
+    <select id="countBySearch" parameterType="life.majiang.community.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
+--         查询搜索到数量
+        select count(id) from QUESTION
+        <where>
+            <if test="search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBySearch" parameterType="life.majiang.community.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
+        select * from QUESTION
+        <where>
+            <if test="search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+        order by modifytime desc limit #{offset}, #{size};
+    </select>
 </mapper>

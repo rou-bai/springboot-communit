@@ -16,9 +16,11 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name="page", defaultValue = "1") Integer page,
-                        @RequestParam(name="size", defaultValue = "3") Integer size){
-        PaginationDTO pagination = questionService.list(page, size);
+                        @RequestParam(name="size", defaultValue = "3") Integer size,
+                        @RequestParam(name="search", required = false) String search){
+        PaginationDTO pagination = questionService.list(page, size, search);
         model.addAttribute("pagination", pagination);
+        model.addAttribute("search", search);
         return "index";
     }
 //    public String hello(@RequestParam(name = "name") String name, Model model){

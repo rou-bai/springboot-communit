@@ -2,6 +2,7 @@ package life.majiang.community.community.service;
 
 import life.majiang.community.community.dto.PaginationDTO;
 import life.majiang.community.community.dto.QuestionDTO;
+import life.majiang.community.community.dto.QuestionQueryDTO;
 import life.majiang.community.community.exception.CustomizeErrorCode;
 import life.majiang.community.community.exception.CustomizeException;
 import life.majiang.community.community.mapper.QuestionExtMapper;
@@ -33,11 +34,21 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size){
+    public PaginationDTO list(Integer page, Integer size, String search){
         Integer offset = size * (page - 1);
-        QuestionExample example = new QuestionExample();
-        example.setOrderByClause("modifytime desc");
-        List<Question> questionList = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
+//        QuestionExample example = new QuestionExample();
+        if(StringUtils.isNotBlank(search)){
+
+            String[] searchs = StringUtils.split(search, " ");
+            search = Arrays.stream(searchs).collect(Collectors.joining("|"));
+        }
+
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setOffset(offset);
+//        example.setOrderByClause("modifytime desc");
+        List<Question> questionList = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
 
@@ -51,7 +62,7 @@ public class QuestionService {
 
         paginationDTO.setData(questionDTOList);
 
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage;
         // 计算总页数
         if(totalCount % size == 0){
