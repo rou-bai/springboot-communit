@@ -138,3 +138,8 @@ body{
     display: inline-block;
     white-space: normal;
 }
+
+.footer{
+    color:#666;
+    padding: 10% 25%;
+}
